@@ -1,0 +1,28 @@
+# Delirium Risk Prediction — Python dependencies (pip path).
+#
+# The recommended setup is conda (environment.yml), which fetches everything
+# as binaries. With pip, the CORE stack below is all wheel-available and
+# installs cleanly on Windows and macOS.
+#
+# REPRODUCIBILITY-CRITICAL — the published model numbers were produced with
+# exactly these versions. Do not change them without re-running the pipeline
+# and confirming the results are unchanged.
+numpy==2.2.4
+scikit-learn==1.6.1
+
+# Compatible ranges (do not affect the model numbers — safe to relax if an
+# install fails on your machine).
+pandas>=2.2,<2.4
+scipy>=1.13,<1.16
+matplotlib>=3.9,<3.11    # 3.11 removed boxplot labels= kwarg used by stage 01
+seaborn>=0.13,<0.14
+
+# Optional extras
+python-docx>=1.1      # stage 08 Word report (skipped gracefully if absent)
+openpyxl>=3.1         # ingest layer reads .xlsx source extracts
+
+# SHAP (pipeline stage 10 only) pulls a compiled dependency (numba/llvmlite)
+# that needs a prebuilt wheel or a compiler. If `pip install shap` fails on
+# your machine, use the conda environment instead (recommended) or skip
+# stage 10. Uncomment to install via pip:
+# shap>=0.46,<0.48

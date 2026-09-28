@@ -1,0 +1,24 @@
+# Conda environment for the Delirium Risk Prediction pipeline.
+#
+#   conda env create -f environment.yml
+#   conda activate delirium
+#   python run_all.py
+#
+# Everything is installed as conda-forge binaries, so no compiler is needed on
+# Windows or macOS. This is the RECOMMENDED setup (the pip path in
+# requirements.txt works too, but SHAP for stage 10 installs more easily here).
+name: delirium
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy=2.2.4            # reproducibility-critical (matches published results)
+  - scikit-learn=1.6.1     # reproducibility-critical
+  - pandas>=2.2,<2.4
+  - scipy>=1.13,<1.16
+  - matplotlib-base>=3.9,<3.11   # 3.11 removed boxplot labels= kwarg used by stage 01
+  - seaborn>=0.13,<0.14
+  - shap>=0.46,<0.48        # stage 10 (SHAP figures)
+  - python-docx>=1.1        # stage 08 Word report (optional)
+  - openpyxl>=3.1           # ingest layer reads .xlsx extracts
+  - pip

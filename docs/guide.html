@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delirium Risk Prediction &mdash; Project Guide</title>
+<style>
+  :root{
+    --ink:#1b2733; --muted:#5b6b7b; --line:#e2e8f0; --bg:#ffffff; --panel:#f7fafc;
+    --accent:#0f766e; --accent-soft:#e6f4f1; --accent2:#1d4ed8; --warn:#9a3412; --warn-soft:#fff4ed;
+    --code-bg:#f4f6f8; --radius:12px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .wrap{max-width:900px;margin:0 auto;padding:32px 20px 80px;}
+  header.hero{border-left:5px solid var(--accent);padding:6px 0 6px 20px;margin-bottom:28px;}
+  header.hero h1{margin:0;font-size:30px;letter-spacing:-.02em;}
+  header.hero p{margin:6px 0 0;color:var(--muted);font-size:17px;}
+  header.hero .meta{margin-top:10px;font-size:13px;color:var(--muted);}
+  h2{margin:44px 0 12px;font-size:21px;padding-bottom:6px;border-bottom:2px solid var(--line);}
+  h3{margin:22px 0 8px;font-size:16px;color:var(--accent);}
+  p{margin:10px 0;}
+  a{color:var(--accent2);}
+  code{background:var(--code-bg);border-radius:5px;padding:1px 6px;font-size:.92em;
+    font-family:"SF Mono",Menlo,Consolas,monospace;}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px 16px;overflow-x:auto;margin:12px 0;}
+  pre code{background:none;padding:0;font-size:13.5px;line-height:1.55;}
+  .callout{background:var(--accent-soft);border:1px solid #cfe8e3;border-radius:var(--radius);
+    padding:18px 20px;margin:18px 0;}
+  .callout h3{margin-top:0;color:var(--accent);}
+  .note{background:var(--warn-soft);border:1px solid #f3d3bd;border-radius:var(--radius);
+    padding:14px 18px;margin:16px 0;font-size:14.5px;color:#7c3208;}
+  .note strong{color:var(--warn);}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;}
+  th{background:var(--panel);font-weight:600;}
+  td code{white-space:nowrap;}
+  .grid2{display:flex;gap:16px;flex-wrap:wrap;}
+  .grid2>div{flex:1 1 240px;}
+  .stat{display:flex;flex-wrap:wrap;gap:12px;margin:14px 0;}
+  .stat .box{flex:1 1 150px;background:var(--panel);border:1px solid var(--line);
+    border-radius:var(--radius);padding:14px 16px;}
+  .stat .box b{display:block;font-size:22px;color:var(--accent);}
+  .stat .box span{font-size:13px;color:var(--muted);}
+  /* flow diagram */
+  .flow{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px;margin:16px 0;}
+  .flow .lane-title{font-weight:600;font-size:14px;color:var(--muted);margin:2px 0 12px;
+    text-transform:uppercase;letter-spacing:.04em;}
+  .chain{display:flex;align-items:stretch;flex-wrap:wrap;gap:8px;}
+  .node{background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;
+    font-size:13px;min-width:120px;display:flex;flex-direction:column;justify-content:center;}
+  .node b{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:12.5px;color:var(--ink);}
+  .node span{color:var(--muted);font-size:11.5px;margin-top:3px;}
+  .node.data{border-color:#bfe3dd;background:var(--accent-soft);}
+  .node.code{border-color:#c9d9f6;background:#eef3fe;}
+  .arrow{display:flex;align-items:center;color:var(--accent);font-size:20px;font-weight:700;}
+  .divider{height:1px;background:var(--line);margin:18px 0;}
+  ul.tight{margin:10px 0;padding-left:22px;}
+  ul.tight li{margin:5px 0;}
+  footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);
+    color:var(--muted);font-size:13px;}
+  .pill{display:inline-block;background:var(--accent-soft);color:var(--accent);
+    border-radius:20px;padding:2px 10px;font-size:12px;font-weight:600;}
+  @media (max-width:560px){ .arrow{transform:rotate(90deg);} }
+  /* print / PDF */
+  @page{ size:A4; margin:14mm; }
+  @media print{
+    html,body{ background:#fff; }
+    .wrap{ max-width:none; margin:0; padding:0; }
+    *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    a{ text-decoration:none; }
+    h2{ break-after:avoid; page-break-after:avoid; }
+    h1{ font-size:26px; }
+    .grid2{ display:block; }
+    .callout,.note,.flow,pre,.stat .box,.node,.chain,tr{ break-inside:avoid; page-break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>Delirium Risk Prediction</h1>
+  <p>Project guide &mdash; how everything fits together, and how to run it.</p>
+  <div class="meta">Eastern Health / Monash University &nbsp;&bull;&nbsp; data engineering by Carlton St</div>
+</header>
+
+<div class="callout">
+  <h3>Start here</h3>
+  <p>One environment, one command. From the repository folder:</p>
+<pre><code>conda env create -f environment.yml
+conda activate delirium
+python run_all.py</code></pre>
+  <p style="margin-bottom:0">Every figure, table, model, and report regenerates into <code>outputs/</code> and
+  <code>reports/</code>. A full run takes about 40 minutes (the bootstrap is the slow part).</p>
+</div>
+
+<h2>1. What this project does</h2>
+<p>It predicts, at the point of hospital admission, which patients are likely to develop
+<strong>delirium</strong> &mdash; using data already collected in the Eastern Health EMR
+(demographics, observations, pathology, medications, nursing risk screens, and prior
+diagnoses).</p>
+<div class="stat">
+  <div class="box"><b>28,565</b><span>admission episodes</span></div>
+  <div class="box"><b>8.0%</b><span>developed delirium</span></div>
+  <div class="box"><b>6&ndash;7</b><span>predictors in the final model</span></div>
+  <div class="box"><b>Random&nbsp;Forest</b><span>primary model (+ logistic regression)</span></div>
+</div>
+
+<h2>2. How to run it</h2>
+<p>You need <strong>Anaconda / Miniconda</strong> (recommended) or Python 3.10&ndash;3.13.</p>
+
+<h3>Option A &mdash; conda (recommended)</h3>
+<pre><code>conda env create -f environment.yml
+conda activate delirium
+python run_all.py</code></pre>
+
+<h3>Option B &mdash; pip</h3>
+<pre><code># Windows
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+python run_all.py
+
+# macOS / Linux
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python run_all.py</code></pre>
+<div class="note">
+  <strong>SHAP note (pip only):</strong> the SHAP importance stage needs the <code>shap</code>
+  package, which is awkward to install with pip. The conda environment includes it. With pip,
+  either run <code>pip install shap</code> or just skip that stage &mdash; <code>run_all.py</code>
+  continues past it and produces everything else.
+</div>
+
+<h2>3. How the data flows</h2>
+<p>There are two parts. <strong>You normally only run Part B</strong> &mdash; the de-identified
+<code>data/cleaned.csv</code> is already in the repository, so the analysis runs straight away.
+Part A only runs when the raw source data is present (it is not in the repository).</p>
+
+<div class="flow">
+  <div class="lane-title">Part A &mdash; building the dataset (only with the raw data)</div>
+  <div class="chain">
+    <div class="node data"><b>raw EMR extracts</b><span>OneDrive (contain identifiers)</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="node code"><b>ingest/*.py</b><span>clean each source</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="node data"><b>source_file_bronze.csv</b><span>the joined table</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="node code"><b>00_prepare_data.py</b><span>de-identify + clean</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="node data"><b>data/cleaned.csv</b><span>de-identified (tracked)</span></div>
+  </div>
+  <div class="divider"></div>
+  <div class="lane-title">Part B &mdash; the analysis (what you run)</div>
+  <div class="chain">
+    <div class="node data"><b>data/cleaned.csv</b><span>the model input</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="node code"><b>pipeline/01&ndash;10</b><span>run_all.py</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="node data"><b>outputs/ + reports/</b><span>figures, tables, models</span></div>
+  </div>
+</div>
+<p><code>run_all.py</code> is smart about this: if it finds <code>data/source_file_bronze.csv</code>
+it runs Part A first (stage 00); otherwise it starts from the committed
+<code>data/cleaned.csv</code>.</p>
+
+<h2>4. How the delirium outcome is defined</h2>
+<p>This is important for the paper, and it was previously unclear, so here it is precisely.</p>
+<div class="grid2">
+  <div>
+    <p>The outcome comes from the recorded <strong>diagnosis codes</strong>, not from a manual
+    label. The flow is:</p>
+    <ul class="tight">
+      <li><code>diagnosis_final_extract.xlsx</code> &mdash; a <strong>raw</strong> query export of
+      the EMR diagnosis table (one row per diagnosis, ~480,000 rows).</li>
+      <li><code>ingest-diagnosis.py</code> matches each free-text <em>Diagnosis Description</em>
+      against a curated list of delirium descriptions (unspecified delirium, delirium superimposed
+      on dementia, postoperative delirium, delirium tremens, and so on).</li>
+      <li>The flag is aggregated <strong>per admission encounter</strong> (a logical OR, since a
+      patient may have multiple qualifying diagnosis rows).</li>
+    </ul>
+    <p>So the model target is: <em>&ldquo;was any delirium diagnosis coded during the
+    encounter?&rdquo;</em> An admission-timing split (incident vs. prevalent/present-on-admission,
+    using <em>Diagnosis Dt Tm</em> vs. <em>Admission Datetime</em>) was investigated and reverted:
+    for the diagnosis types that carry most delirium codes (Principal Dx / Additional Dx),
+    <em>Diagnosis Dt Tm</em> could not be reliably distinguished from discharge-coding lag (58.7%
+    of these fall within 24h of the discharge date, median 9.7h before discharge), and restricting
+    to diagnosis types with more reliable real-time timestamps (Clinical Dx / Complication) left too
+    few cases (68 rows) to be usable. Given this, the timing split is not reliably identifiable from
+    this data, so all delirium diagnoses (any timing) are retained as outcome-positive &mdash; see
+    the manuscript Limitations section for the full analysis. The same script derives comorbidity
+    flags (dementia, COPD, atrial fibrillation, psychiatric disorders, hip fracture) the same way,
+    since those also represent diagnoses coded at any point during the encounter.</p>
+  </div>
+  <div>
+    <div class="flow" style="margin-top:0">
+      <div class="chain" style="flex-direction:column;gap:8px;">
+        <div class="node data" style="min-width:auto"><b>diagnosis_final_extract.xlsx</b><span>raw diagnosis rows</span></div>
+        <div class="arrow" style="justify-content:center">&darr;</div>
+        <div class="node code" style="min-width:auto"><b>ingest-diagnosis.py</b><span>match delirium descriptions, OR per encounter</span></div>
+        <div class="arrow" style="justify-content:center">&darr;</div>
+        <div class="node data" style="min-width:auto"><b>delirium flag</b><span>1 per encounter</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="note">
+  <strong>Provenance correction:</strong> <code>diagnosis_final_extract.xlsx</code> is a
+  <em>direct database query export</em> &mdash; it was <strong>not</strong> derived from the large
+  <code>DAIS1075588.xlsx</code> file. DAIS is a separate data-access extract (ED presentations,
+  inpatient episodes, demographics) that only holds a concatenated diagnosis <em>list</em> per
+  episode, so it could not have produced the granular diagnosis rows. The file
+  <code>diagnosis_filtered.xlsx</code> is a one-off manual Excel check of the delirium codes and
+  is not part of the pipeline.
+</div>
+
+<h2>5. The pipeline stages</h2>
+<table>
+  <tr><th>Stage</th><th>What it does</th></tr>
+  <tr><td><code>00_prepare_data</code></td><td>Builds <code>data/cleaned.csv</code> from the raw bronze join (de-identify + clean). Runs only if the bronze file is present.</td></tr>
+  <tr><td><code>01_cross_validation</code></td><td>10-fold nested cross-validation with hyperparameter tuning and Platt calibration.</td></tr>
+  <tr><td><code>01b_selected_features</code></td><td>Which features are selected in each fold (the stable core).</td></tr>
+  <tr><td><code>02_bootstrap_validation</code></td><td>500-iteration bootstrap with optimism correction (internal validity).</td></tr>
+  <tr><td><code>03&ndash;05</code></td><td>Publication figures: ROC, calibration, decision-curve analysis (+ tables).</td></tr>
+  <tr><td><code>05b_threshold_performance</code></td><td>Sensitivity / specificity / PPV / NPV across risk thresholds.</td></tr>
+  <tr><td><code>06 / 06b</code></td><td>Sensitivity analyses; subgroup / fairness analysis by sex.</td></tr>
+  <tr><td><code>07_figure1</code></td><td>(Optional) the manuscript pipeline diagram.</td></tr>
+  <tr><td><code>09_model_specification</code></td><td>Full model spec (coefficients, importances, calibration) + saved models.</td></tr>
+  <tr><td><code>10_shap_importance</code></td><td>SHAP feature-importance figures.</td></tr>
+  <tr><td><code>08_results_report</code></td><td>Assembles the journal-ready Results section (runs last).</td></tr>
+  <tr><td><code>eda.py</code></td><td>Exploratory descriptive charts (run separately: <code>python eda.py</code>).</td></tr>
+</table>
+
+<h2>6. Where the data lives, and what is safe to share</h2>
+<ul class="tight">
+  <li><span class="pill">safe</span> <code>data/cleaned.csv</code> is <strong>de-identified</strong>
+  (all encounter/URN ids, dates, and ward names are removed) and is the only dataset committed to
+  the repository.</li>
+  <li><span class="pill">private</span> the raw extracts and <code>source_file_bronze.csv</code>
+  contain identifiers and live in <strong>OneDrive</strong> &mdash; never in git.</li>
+  <li>The <code>.gitignore</code> blocks everything under <code>data/</code> except
+  <code>cleaned.csv</code>, so raw patient data cannot be committed by accident.</li>
+</ul>
+
+<h2>7. Results at a glance</h2>
+<div class="stat">
+  <div class="box"><b>0.877</b><span>RF c-statistic (cross-validation)</span></div>
+  <div class="box"><b>0.909</b><span>calibrated (bootstrap out-of-sample)</span></div>
+  <div class="box"><b>0.93</b><span>calibration slope (well calibrated)</span></div>
+  <div class="box"><b>~12%</b><span>of admissions flagged at a 15% threshold</span></div>
+</div>
+<p>At a 15% risk threshold the model reaches sensitivity 0.65 and specificity 0.93, and performance
+is consistent across sex subgroups. The full write-ups regenerate into
+<code>reports/results_report.md</code> and <code>reports/model_specification.md</code>.</p>
+
+<h2>8. Repository map</h2>
+<pre><code>data/            cleaned.csv  (the de-identified model input)
+pipeline/        stages 00-10 + common.py (shared config)
+outputs/         generated figures/tables/models  (regenerated on run)
+reports/         results_report.md + model_specification.md
+ingest/          scripts that build the raw extracts into the bronze join
+run_all.py       run the whole pipeline
+eda.py           exploratory charts
+environment.yml / requirements.txt   pinned dependencies
+docs/            this guide (guide.pdf + guide.html)</code></pre>
+
+<h2>9. Working with git (the basics)</h2>
+<ul class="tight">
+  <li>Get the latest code: <code>git pull</code></li>
+  <li>See what changed: <code>git status</code></li>
+  <li>Running the pipeline changes files in <code>outputs/</code> &mdash; that is expected, and git
+  ignores them. You never need to commit anything under <code>outputs/</code>.</li>
+  <li>If <code>git status</code> shows changes to <code>reports/*.md</code> after a run, that is the
+  regenerated report; commit it only if you mean to update the versioned results.</li>
+  <li>When in doubt, do not force anything &mdash; ask.</li>
+</ul>
+
+<footer>
+  Reproducibility: the published numbers were produced with numpy 2.2.4 and scikit-learn 1.6.1
+  (pinned), and the pipeline is deterministic (random seed 42).
+  &nbsp;&bull;&nbsp; See <code>README.md</code> and <code>pipeline/README.md</code> for more detail.
+</footer>
+
+</div>
+</body>
+</html>
